@@ -1,9 +1,11 @@
 package com.example.hotel.util;
 
 import com.example.hotel.model.Booking;
+import com.example.hotel.model.Customer;
 import com.example.hotel.model.Hotel;
 import com.example.hotel.model.Room;
 import com.example.hotel.repository.IBookingRepository;
+import com.example.hotel.repository.ICustomerRepository;
 import com.example.hotel.repository.ISearchRepository;
 import org.springframework.stereotype.Component;
 
@@ -13,7 +15,7 @@ import java.util.*;
 @Component
 public class DataImporter {
 
-    public void insertData(ISearchRepository searchRepository,IBookingRepository iBookingRepository){
+    public void insertData(ISearchRepository searchRepository, IBookingRepository iBookingRepository, ICustomerRepository iCustomerRepository){
 
         Hotel hotel1 = new Hotel(1L,"Marriott","Delhi");
         Room room11 = new Room(hotel1,true);
@@ -46,15 +48,24 @@ public class DataImporter {
         hotel3 = searchRepository.save(hotel3);
         hotel4 = searchRepository.save(hotel4);
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        Customer customer1 = new Customer("John");
+        Customer customer2 = new Customer("Robert");
+        iCustomerRepository.save(customer1);
+        iCustomerRepository.save(customer2);
         try {
-            Booking booking1 = new Booking(format.parse("2021-02-12"), format.parse("2021-02-17"), hotel1.getHotelId(), 1);
-            Booking booking2 = new Booking(format.parse("2021-02-16"), format.parse("2021-02-20"), hotel1.getHotelId(), 2);
-            Booking booking3 = new Booking(format.parse("2021-06-01"), format.parse("2021-06-06"), hotel2.getHotelId(), 3);
-            Booking booking4 = new Booking(format.parse("2021-04-12"), format.parse("2021-05-17"), hotel3.getHotelId(), 2);
+            Booking booking1 = new Booking(format.parse("2021-02-12"), format.parse("2021-02-17"),hotel1,customer1, 4);
+            Booking booking2 = new Booking(format.parse("2021-02-16"), format.parse("2021-02-20"),hotel1,customer1 ,2);
+            Booking booking3 = new Booking(format.parse("2021-06-01"), format.parse("2021-06-06"),hotel2,customer2,2);
+            Booking booking4 = new Booking(format.parse("2021-04-12"), format.parse("2021-05-17"),hotel3,customer2, 2);
+            customer1.setBookingList(Arrays.asList(booking1,booking2));
+            customer2.setBookingList(Arrays.asList(booking3,booking4));
+            iCustomerRepository.save(customer1);
+            iCustomerRepository.save(customer2);
             iBookingRepository.save(booking1);
             iBookingRepository.save(booking2);
             iBookingRepository.save(booking3);
             iBookingRepository.save(booking4);
+
         }catch(Exception e){
 
         }
@@ -63,8 +74,10 @@ public class DataImporter {
 
 
 
-    public void deleteAll(ISearchRepository bean, IBookingRepository bean1) {
-        bean.deleteAll();
-        bean1.deleteAll();
+    public void deleteAll(ISearchRepository bean, IBookingRepository bean1, ICustomerRepository bean3) {
+//        bean.deleteAll();
+//        bean3.deleteAll();
+//        bean1.deleteAll();
+
     }
 }

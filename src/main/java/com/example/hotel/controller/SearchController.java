@@ -1,5 +1,6 @@
 package com.example.hotel.controller;
 
+import com.example.hotel.dto.response.HotelResponseDto;
 import com.example.hotel.exception.ResourceNotFoundException;
 import com.example.hotel.model.Hotel;
 import com.example.hotel.service.ISearchService;
@@ -17,59 +18,65 @@ import java.util.List;
 
 @RestController
 public class SearchController {
-        @Autowired
-        private ISearchService iSearchService;
+    @Autowired
+    private ISearchService iSearchService;
 
-        @GetMapping(value = "/")
-        ResponseEntity<APIResponse<List<Hotel>>> getAllHotels(){
-                List<Hotel> list = new ArrayList<>();
-                APIResponse<List<Hotel>> resp = new APIResponse<>();
-                try{
-                        list = iSearchService.getAllHotels();
-                        resp.setData(list);
-                        return new ResponseEntity<APIResponse<List<Hotel>>>(resp, HttpStatus.OK);
+    @GetMapping(value = "/")
+    ResponseEntity<APIResponse<List<HotelResponseDto>>> getAllHotels(){
+        List<HotelResponseDto> responseData = new ArrayList<>();
+        APIResponse<List<HotelResponseDto>> response = new APIResponse<>();
+        try{
+            List<Hotel> list= iSearchService.getAllHotels();
+            for(Hotel h: list) {
+                HotelResponseDto data = new HotelResponseDto();
+                data.convertToHotelResponse(h);
+                responseData.add(data);
+            }
+            response.setData(responseData);
+            return new ResponseEntity<>(response, HttpStatus.OK);
 
-                }catch(Exception e){
-
-                }
-                resp.setStatus("failure");
-                return new ResponseEntity<APIResponse<List<Hotel>>>(resp,HttpStatus.INTERNAL_SERVER_ERROR);
-
-        }
-
-        @GetMapping(value = "/search")
-        ResponseEntity<APIResponse<List<Hotel>>> getAllHotelsWithDate(@RequestParam(name = "city")String city,
-                                                           @RequestParam(name = "checkIn") String checkIn,
-                                                           @RequestParam(name = "checkOut") String checkOut){
-
-                List<Hotel> list = new ArrayList<>();
-                APIResponse<List<Hotel>> resp = new APIResponse<>();
-
-                try {
-                        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-                        Date date_from = formatter.parse(checkIn);
-                        Date date_to = formatter.parse(checkOut);
-                        list = iSearchService.getAllHotelsWithDate(city,date_from,date_to);
-                        resp.setData(list);
-                        return new ResponseEntity<APIResponse<List<Hotel>>>(resp,HttpStatus.OK);
-                }
-                catch (Exception e){
-                        if(e instanceof ParseException) {
-                                resp.setMessage("Date not formatted");
-                                resp.setStatus("failure");
-                                return new ResponseEntity<APIResponse<List<Hotel>>>(resp, HttpStatus.BAD_REQUEST);
-                        }
-                        if(e instanceof ResourceNotFoundException){
-                                resp.setMessage(e.getMessage());
-                                resp.setStatus("failure");
-                                return new ResponseEntity<APIResponse<List<Hotel>>>(resp, HttpStatus.NOT_FOUND);
-
-                        }
-                }
-                resp.setStatus("failure");
-                return new ResponseEntity<APIResponse<List<Hotel>>>(resp,HttpStatus.OK);
-
+        }catch(Exception e){
 
         }
+        response.setStatus("failure");
+        response.setMessage("Internal Server Error.");
+        return new ResponseEntity<>(response,HttpStatus.INTERNAL_SERVER_ERROR);
+
+    }
+
+    @GetMapping(value = "/search")
+    ResponseEntity<APIResponse<List<HotelResponseDto>>> getAllHotelsWithDate(@RequestParam(name = "city")String city,
+                                                                             @RequestParam(name = "arriving_date") String arrivingDate,
+                                                                             @RequestParam(name = "departure_date") String departureDate){
+
+
+        APIResponse<List<HotelResponseDto>> response = new APIResponse<>();
+        List<HotelResponseDto> responseData = new ArrayList<>();
+        try {
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+            Date dateFrom = formatter.parse(arrivingDate);
+            Date dateTo = formatter.parse(departureDate);
+            List<Hotel> list = iSearchService.getAllHotelsWithDate(city,dateFrom,dateTo);
+            for(Hotel h: list) {
+                HotelResponseDto data = new HotelResponseDto();
+                data.convertToHotelResponse(h);
+                responseData.add(data);
+            }
+            response.setData(responseData);
+            return new ResponseEntity<>(response,HttpStatus.OK);
+        }
+        catch (Exception e){
+            if(e instanceof ParseException) {
+                response.setMessage("Date not formatted");
+                response.setStatus("failure");
+                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+            }
+        }
+        response.setStatus("failure");
+        response.setMessage("Internal Server Error.");
+        return new ResponseEntity<>(response,HttpStatus.INTERNAL_SERVER_ERROR);
+
+
+    }
 
 }

@@ -1,5 +1,7 @@
 package com.example.hotel.model;
 
+import com.sun.istack.NotNull;
+
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -7,11 +9,16 @@ import java.util.Objects;
 @Table(name = "room")
 public class Room {
     @Id
+    @NotNull
     @GeneratedValue
-    private Long roomId;
+    @Column(name = "id" , updatable = false, nullable = false)
+    private Long id;
+
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "hotelId")
+    @JoinColumn(name = "hotel_id", referencedColumnName = "id")
     private Hotel hotel;
+
+    @Column(name = "available")
     private boolean available;
 
     public Room() {
@@ -22,18 +29,18 @@ public class Room {
         this.available = available;
     }
 
-    public Room(Long roomId, Hotel hotel, boolean available) {
-        this.roomId = roomId;
+    public Room(Long id, Hotel hotel, boolean available) {
+        this.id = id;
         this.hotel = hotel;
         this.available = available;
     }
 
     public Long getRoomId() {
-        return roomId;
+        return id;
     }
 
-    public void setRoomId(Long roomId) {
-        this.roomId = roomId;
+    public void setRoomId(Long id) {
+        this.id = id;
     }
 
     public Hotel getHotel() {
@@ -57,18 +64,18 @@ public class Room {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Room room = (Room) o;
-        return roomId.equals(room.roomId) && hotel.equals(room.hotel);
+        return id.equals(room.id) && hotel.equals(room.hotel);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(roomId, hotel);
+        return Objects.hash(id, hotel);
     }
 
     @Override
     public String toString() {
         return "Room{" +
-                "roomId=" + roomId +
+                "id=" + id +
                 ", hotel=" + hotel +
                 ", available=" + available +
                 '}';

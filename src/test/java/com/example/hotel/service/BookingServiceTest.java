@@ -30,20 +30,20 @@ class BookingServiceTest {
     private ISearchRepository iSearchRepository;
 
     @InjectMocks
-    private BookingService iBookingService;
+    private BookingServiceImpl iBookingService;
     List<Booking> bookingList = new ArrayList<>();
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        Booking booking1 = new Booking(16L, Date.valueOf("2021-02-02"),Date.valueOf("2021-02-06"),1L,3);
-        Booking booking2 = new Booking(26L, Date.valueOf("2021-02-05"),Date.valueOf("2021-02-08"),1L,2);
-        Booking booking3 = new Booking(11L, Date.valueOf("2021-05-23"),Date.valueOf("2021-05-29"),2L,5);
-        Booking booking4 = new Booking(25L, Date.valueOf("2021-02-02"),Date.valueOf("2021-02-06"),3L,2);
-        bookingList.add(booking1);
-        bookingList.add(booking2);
-        bookingList.add(booking3);
-        bookingList.add(booking4);
+//        Booking booking1 = new Booking(16L, Date.valueOf("2021-02-02"),Date.valueOf("2021-02-06"),1L,3);
+//        Booking booking2 = new Booking(26L, Date.valueOf("2021-02-05"),Date.valueOf("2021-02-08"),1L,2);
+//        Booking booking3 = new Booking(11L, Date.valueOf("2021-05-23"),Date.valueOf("2021-05-29"),2L,5);
+//        Booking booking4 = new Booking(25L, Date.valueOf("2021-02-02"),Date.valueOf("2021-02-06"),3L,2);
+//        bookingList.add(booking1);
+//        bookingList.add(booking2);
+//        bookingList.add(booking3);
+//        bookingList.add(booking4);
     }
 
     @Test

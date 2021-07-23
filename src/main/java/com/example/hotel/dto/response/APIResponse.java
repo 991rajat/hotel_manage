@@ -1,12 +1,24 @@
 package com.example.hotel.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class APIResponse<T> {
+    @JsonProperty("status")
     private String status;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonProperty("data")
     private T data;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonProperty("message")
     private String message;
 
     public APIResponse() {
         status="success";
+        message=null;
+        data=null;
     }
 
     public APIResponse(String status, T data, String message) {

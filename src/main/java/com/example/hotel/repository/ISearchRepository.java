@@ -12,6 +12,6 @@ import java.util.Optional;
 @Repository
 public interface ISearchRepository extends JpaRepository<Hotel, Long> {
 
-    @Query(value = "select * from hotel where hotel_city=:city",nativeQuery = true)
+    @Query(value = "select * from hotel where city=:city",nativeQuery = true)
     Optional<List<Hotel>> findHotelWithCity(@Param("city")String city);
 }

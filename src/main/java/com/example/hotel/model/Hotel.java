@@ -1,6 +1,7 @@
 package com.example.hotel.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.sun.istack.NotNull;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -11,50 +12,58 @@ import java.util.Objects;
 @Table(name = "hotel")
 public class Hotel {
     @Id
+    @NotNull
     @GeneratedValue
-    private Long hotelId;
-    private String hotelName;
-    private String hotelCity;
+    @Column(name = "id" , updatable = false, nullable = false)
+    private Long id;
+
+    @Column(name = "name")
+    private String name;
+
+    @Column(name = "city")
+    private String city;
+
     @JsonIgnore
     @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Room> roomList = new ArrayList<>();
 
+
     public Hotel() {
     }
 
-    public Hotel(String hotelName, String hotelCity) {
-        this.hotelName = hotelName;
-        this.hotelCity = hotelCity;
+    public Hotel(String name, String city) {
+        this.name = name;
+        this.city = city;
     }
 
-    public Hotel(Long hotelId, String hotelName, String hotelCity) {
-        this.hotelId = hotelId;
-        this.hotelName = hotelName;
-        this.hotelCity = hotelCity;
+    public Hotel(Long id, String name, String city) {
+        this.id = id;
+        this.name = name;
+        this.city = city;
     }
 
-    public Long getHotelId() {
-        return hotelId;
+    public Long getId() {
+        return id;
     }
 
-    public void setHotelId(Long hotelId) {
-        this.hotelId = hotelId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public String getHotelName() {
-        return hotelName;
+    public String getName() {
+        return name;
     }
 
-    public void setHotelName(String hotelName) {
-        this.hotelName = hotelName;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getHotelCity() {
-        return hotelCity;
+    public String getCity() {
+        return city;
     }
 
-    public void setHotelCity(String hotelCity) {
-        this.hotelCity = hotelCity;
+    public void setCity(String city) {
+        this.city = city;
     }
 
     public List<Room> getRoomList() {
@@ -65,25 +74,29 @@ public class Hotel {
         this.roomList = roomList;
     }
 
+    public void addRoom(Room room){
+        roomList.add(room);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Hotel hotel = (Hotel) o;
-        return hotelId.equals(hotel.hotelId);
+        return id.equals(hotel.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(hotelId);
+        return Objects.hash(id);
     }
 
     @Override
     public String toString() {
         return "Hotel{" +
-                "hotelId=" + hotelId +
-                ", hotelName='" + hotelName + '\'' +
-                ", hotelCity='" + hotelCity + '\'' +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", city='" + city + '\'' +
                 '}';
     }
 }

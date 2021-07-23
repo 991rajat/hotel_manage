@@ -1,6 +1,7 @@
 package com.example.hotel;
 
 import com.example.hotel.repository.IBookingRepository;
+import com.example.hotel.repository.ICustomerRepository;
 import com.example.hotel.repository.ISearchRepository;
 import com.example.hotel.util.DataImporter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +17,9 @@ public class HotelApplication {
 
 		ApplicationContext context= SpringApplication.run(HotelApplication.class, args);
 		DataImporter imp = new DataImporter();
-		imp.deleteAll(context.getBean(ISearchRepository.class),context.getBean(IBookingRepository.class));
-		imp.insertData(context.getBean(ISearchRepository.class),context.getBean(IBookingRepository.class));
+		imp.deleteAll(context.getBean(ISearchRepository.class),context.getBean(IBookingRepository.class),context.getBean(ICustomerRepository.class));
+		imp.insertData(context.getBean(ISearchRepository.class),context.getBean(IBookingRepository.class),context.getBean(ICustomerRepository.class));
+
 	}
 
 }
