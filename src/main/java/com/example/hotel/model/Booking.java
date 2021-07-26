@@ -18,13 +18,13 @@ public class Booking {
 
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Temporal(TemporalType.DATE)
-    @Column(name = "date_from")
-    private Date dateFrom;
+    @Column(name = "arriving_date")
+    private Date arrivingDate;
 
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Temporal(TemporalType.DATE)
-    @Column(name = "date_to")
-    private Date dateTo;
+    @Column(name = "departure_date")
+    private Date departureDate;
 
     @Column(name = "status")
     private BookingStatus status;
@@ -43,19 +43,19 @@ public class Booking {
     public Booking() {
     }
 
-    public Booking(Long id, Date dateFrom, Date dateTo, BookingStatus status, Hotel hotel, Customer customer, Integer bookedRooms) {
+    public Booking(Long id, Date arrivingDate, Date departureDate, BookingStatus status, Hotel hotel, Customer customer, Integer bookedRooms) {
         this.id = id;
-        this.dateFrom = dateFrom;
-        this.dateTo = dateTo;
+        this.arrivingDate = arrivingDate;
+        this.departureDate = departureDate;
         this.status = status;
         this.hotel = hotel;
         this.customer = customer;
         this.bookedRooms = bookedRooms;
     }
 
-    public Booking(Date dateFrom, Date dateTo, Hotel hotel, Customer customer, Integer bookedRooms) {
-        this.dateFrom = dateFrom;
-        this.dateTo = dateTo;
+    public Booking(Date arrivingDate, Date departureDate, Hotel hotel, Customer customer, Integer bookedRooms) {
+        this.arrivingDate = arrivingDate;
+        this.departureDate = departureDate;
         this.hotel = hotel;
         this.customer = customer;
         this.bookedRooms = bookedRooms;
@@ -70,20 +70,28 @@ public class Booking {
         this.id = id;
     }
 
-    public Date getDateFrom() {
-        return dateFrom;
+    public Long getId() {
+        return id;
     }
 
-    public void setDateFrom(Date dateFrom) {
-        this.dateFrom = dateFrom;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public Date getDateTo() {
-        return dateTo;
+    public Date getArrivingDate() {
+        return arrivingDate;
     }
 
-    public void setDateTo(Date dateTo) {
-        this.dateTo = dateTo;
+    public void setArrivingDate(Date arrivingDate) {
+        this.arrivingDate = arrivingDate;
+    }
+
+    public Date getDepartureDate() {
+        return departureDate;
+    }
+
+    public void setDepartureDate(Date departureDate) {
+        this.departureDate = departureDate;
     }
 
     public Integer getBookedRooms() {
@@ -128,8 +136,8 @@ public class Booking {
     public String toString() {
         return "Booking{" +
                 "id=" + id +
-                ", dateFrom=" + dateFrom +
-                ", dateTo=" + dateTo +
+                ", arrivingDate=" + arrivingDate +
+                ", departureDate=" + departureDate +
                 ", hotelId=" + hotel.getId() +
                 ", bookedRooms=" + bookedRooms +
                 '}';

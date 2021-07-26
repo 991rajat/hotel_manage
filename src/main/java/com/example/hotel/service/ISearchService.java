@@ -1,12 +1,12 @@
 package com.example.hotel.service;
 
-import com.example.hotel.exception.ResourceNotFoundException;
-import com.example.hotel.model.Hotel;
+import com.example.hotel.dto.response.HotelResponseDto;
+import com.example.hotel.exception.NotFoundException;
 
 import java.util.Date;
 import java.util.List;
 
 public interface ISearchService {
-    List<Hotel> getAllHotels();
-    List<Hotel> getAllHotelsWithDate(String city, Date checkIn, Date checkout) throws ResourceNotFoundException;
+    List<HotelResponseDto> getAllHotels();
+    List<HotelResponseDto> getAllHotelsWithDate(String city, Date checkIn, Date checkout) throws NotFoundException;
 }

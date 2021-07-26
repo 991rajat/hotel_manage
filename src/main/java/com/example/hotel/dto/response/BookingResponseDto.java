@@ -105,8 +105,8 @@ public class BookingResponseDto {
 
     public void convertToBookingResponse(Booking booking){
         setId(booking.getBookingId());
-        setArrivingDate(booking.getDateFrom());
-        setDepartureDate(booking.getDateTo());
+        setArrivingDate(booking.getArrivingDate());
+        setDepartureDate(booking.getDepartureDate());
         setBookedRooms(booking.getBookedRooms());
         setHotelId(booking.getHotel().getId());
         setCustomerId(booking.getCustomer().getId());

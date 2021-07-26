@@ -3,7 +3,8 @@ package com.example.hotel.service;
 import com.example.hotel.dao.IBookingDao;
 import com.example.hotel.dao.ISearchDao;
 import com.example.hotel.dto.request.BookingRequestDto;
-import com.example.hotel.exception.ResourceNotFoundException;
+import com.example.hotel.dto.response.BookingResponseDto;
+import com.example.hotel.exception.NotFoundException;
 import com.example.hotel.exception.RoomNotAvailableException;
 import com.example.hotel.model.Booking;
 import com.example.hotel.model.Customer;
@@ -11,7 +12,7 @@ import com.example.hotel.model.Hotel;
 import com.example.hotel.repository.ICustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,43 +28,62 @@ public class BookingServiceImpl implements IBookingService{
     @Autowired
     ICustomerRepository iCustomerRepository;
 
+    // @Desc : Get All Bookings.
     @Override
-    public List<Booking> getAllBookings() {
-        return iBookingDao.getAllBookings();
+    public List<BookingResponseDto> getAllBookings() {
+        List<BookingResponseDto> bookingResponseList = new ArrayList<>();
+        List<Booking> bookingList = iBookingDao.getAllBookings();
+        for(Booking booking: bookingList){
+            BookingResponseDto bookingResponse  = new BookingResponseDto();
+            bookingResponse.convertToBookingResponse(booking);
+            bookingResponseList.add(bookingResponse);
+        }
+        return bookingResponseList;
     }
 
+    // @Desc : Get a booking with particular id.
     @Override
-    public Booking getBookingWithId(Long bookingId) throws ResourceNotFoundException {
-        return iBookingDao.getBookingWithId(bookingId);
+    public BookingResponseDto getBookingWithId(Long bookingId) throws NotFoundException {
+        Optional<Booking> booking = iBookingDao.getBookingWithId(bookingId);
+        if(!booking.isPresent())
+            throw new NotFoundException("Booking not found with id " +bookingId+'.');
+        BookingResponseDto bookingResponse = new BookingResponseDto();
+        bookingResponse.convertToBookingResponse(booking.get());
+        return bookingResponse;
     }
 
+    // @Desc : Booking a hotel.
     @Override
-    public Booking bookingHotel(BookingRequestDto booking) throws ResourceNotFoundException, RoomNotAvailableException {
+    public BookingResponseDto bookingHotel(BookingRequestDto bookingRequest) throws NotFoundException, RoomNotAvailableException {
 
-        Optional<Hotel> hotel = iSearchDao.findHotelById(booking.getHotelId());
-        Optional<Customer> customer = iCustomerRepository.findById(booking.getCustomerId());
+        Optional<Hotel> hotel = iSearchDao.findHotelById(bookingRequest.getHotelId());
         if(!hotel.isPresent()){
-            throw new ResourceNotFoundException("Hotel not found with id "+booking.getHotelId()+".");
+            throw new NotFoundException("Hotel not found with id "+bookingRequest.getHotelId()+".");
         }
+
+        Optional<Customer> customer = iCustomerRepository.findById(bookingRequest.getCustomerId());
         if(!customer.isPresent()){
-            throw new ResourceNotFoundException("Customer not found with id "+booking.getHotelId()+".");
+            throw new NotFoundException("Customer not found with id "+bookingRequest.getHotelId()+".");
         }
-        int booked_rooms = iBookingDao.countOfBookedRoomsOfHotelWithDate(booking.getHotelId(),booking.getArrivingDate(),booking.getDepartureDate());
-        int available_rooms = hotel.get().getRoomList().size() - booked_rooms;
-        if(available_rooms < booking.getNoOfRooms()) {
+
+        int bookedRooms = iBookingDao.countOfBookedRoomsOfHotelWithDate(bookingRequest.getHotelId(),bookingRequest.getArrivingDate(),bookingRequest.getDepartureDate());
+        int availableRooms = hotel.get().getRoomList().size() - bookedRooms;
+        if(availableRooms < bookingRequest.getNoOfRooms()) {
             throw new RoomNotAvailableException("Room not available.");
         }
-        Booking newBooking = new Booking(
-                booking.getArrivingDate(),
-                booking.getDepartureDate(),
-                hotel.get(),
-                customer.get(),
-                booking.getNoOfRooms());
-        return iBookingDao.bookHotel(newBooking);
+        Booking newBooking = new Booking(bookingRequest.getArrivingDate(), bookingRequest.getDepartureDate(), hotel.get(), customer.get(), bookingRequest.getNoOfRooms());
+        newBooking = iBookingDao.bookHotel(newBooking);
+        BookingResponseDto bookingResponse = new BookingResponseDto();
+        bookingResponse.convertToBookingResponse(newBooking);
+        return bookingResponse;
     }
 
+    // @Desc : Cancel a booking with particular id.
     @Override
-    public boolean cancelBooking(Long bookingId) throws ResourceNotFoundException {
+    public boolean cancelBooking(Long bookingId) throws NotFoundException {
+        Optional<Booking> booking = iBookingDao.getBookingWithId(bookingId);
+        if(!booking.isPresent())
+            throw new NotFoundException("Booking not found with id " +bookingId+'.');
         iBookingDao.cancelBooking(bookingId);
         return true;
     }

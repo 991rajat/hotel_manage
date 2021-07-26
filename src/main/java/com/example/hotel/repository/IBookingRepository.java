@@ -13,8 +13,8 @@ import java.util.List;
 @Repository
 public interface IBookingRepository extends JpaRepository<Booking,Long> {
 
-    @Query(value = "select COALESCE(sum(booked_rooms), 0) from booking where hotel_id = :id and status = 'ACTIVE' and :checkOut >= date_from and :checkIn <= date_to", nativeQuery = true)
-    int countBookedRoomsWithHotelWithDate(@Param("id")Long id,@Param("checkIn") Date checkIn,@Param("checkOut") Date checkOut);
+    @Query(value = "select COALESCE(sum(booked_rooms), 0) from booking where hotel_id = :id and status = 0 and :departureDate >= arriving_date and :arrivingDate <= departure_date", nativeQuery = true)
+    int countBookedRoomsWithHotelWithDate(@Param("id")Long id,@Param("arrivingDate") Date arrivingDate,@Param("departureDate") Date departureDate);
 
 
 }

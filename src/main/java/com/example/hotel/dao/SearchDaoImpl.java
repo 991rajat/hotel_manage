@@ -14,16 +14,19 @@ public class SearchDaoImpl implements ISearchDao{
     @Autowired
     private ISearchRepository iSearchRepository;
 
+    //@Desc :  Get list of all hotels.
     @Override
     public List<Hotel> findAllHotels() {
         return iSearchRepository.findAll();
     }
 
+    //@Desc : Get list of all hotels with a given city.
     @Override
     public List<Hotel> findAllHotelsWithCity(String city) {
-        return iSearchRepository.findHotelWithCity(city).get();
+        return iSearchRepository.findByCity(city);
     }
 
+    //@Desc : Get a hotel with a given id.
     @Override
     public Optional<Hotel> findHotelById(Long id) {
         return iSearchRepository.findById(id);

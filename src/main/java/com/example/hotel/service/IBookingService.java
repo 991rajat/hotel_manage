@@ -1,19 +1,18 @@
 package com.example.hotel.service;
 
 import com.example.hotel.dto.request.BookingRequestDto;
-import com.example.hotel.exception.ResourceNotFoundException;
+import com.example.hotel.dto.response.BookingResponseDto;
+import com.example.hotel.exception.NotFoundException;
 import com.example.hotel.exception.RoomNotAvailableException;
-import com.example.hotel.model.Booking;
 
-import java.awt.print.Book;
 import java.util.List;
 
 public interface IBookingService {
-    Booking bookingHotel(BookingRequestDto booking) throws ResourceNotFoundException, RoomNotAvailableException;
+    BookingResponseDto bookingHotel(BookingRequestDto booking) throws NotFoundException, RoomNotAvailableException;
 
-    boolean cancelBooking(Long bookingId) throws ResourceNotFoundException;
+    boolean cancelBooking(Long bookingId) throws NotFoundException;
 
-    List<Booking> getAllBookings();
+    List<BookingResponseDto> getAllBookings();
 
-    Booking getBookingWithId(Long bookingId) throws ResourceNotFoundException;
+    BookingResponseDto getBookingWithId(Long bookingId) throws NotFoundException;
 }

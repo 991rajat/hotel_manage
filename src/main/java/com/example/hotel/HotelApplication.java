@@ -16,9 +16,9 @@ public class HotelApplication {
 
 
 		ApplicationContext context= SpringApplication.run(HotelApplication.class, args);
-		DataImporter imp = new DataImporter();
-		imp.deleteAll(context.getBean(ISearchRepository.class),context.getBean(IBookingRepository.class),context.getBean(ICustomerRepository.class));
-		imp.insertData(context.getBean(ISearchRepository.class),context.getBean(IBookingRepository.class),context.getBean(ICustomerRepository.class));
+//		DataImporter imp = new DataImporter();
+//		imp.deleteAll(context.getBean(ISearchRepository.class),context.getBean(IBookingRepository.class),context.getBean(ICustomerRepository.class));
+//		imp.insertData(context.getBean(ISearchRepository.class),context.getBean(IBookingRepository.class),context.getBean(ICustomerRepository.class));
 
 	}
 

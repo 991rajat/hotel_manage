@@ -9,6 +9,6 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface ICustomerRepository extends JpaRepository<Customer,Long> {
-    @Query(value = "SELECT new com.example.hotel.model.Booking(b.id,b.dateFrom,b.dateTo,b.status,b.hotel,b.customer,b.bookedRooms) FROM Booking b where b.customer.id=?1" )
+    @Query(value = "SELECT new com.example.hotel.model.Booking(b.id,b.arrivingDate,b.departureDate,b.status,b.hotel,b.customer,b.bookedRooms) FROM Booking b where b.customer.id=?1" )
     List<Booking> getAllBookings(@Param("id")Long id);
 }
