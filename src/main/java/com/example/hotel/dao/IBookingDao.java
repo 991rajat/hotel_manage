@@ -11,6 +11,6 @@ public interface IBookingDao {
     List<Booking> getAllBookings();
     int countOfBookedRoomsOfHotelWithDate(Long id, Date checkIn,Date checkOut);
     Booking bookHotel(Booking booking);
-    void cancelBooking(Long id) throws NotFoundException;
+    boolean cancelBooking(Long id) throws NotFoundException;
     Optional<Booking> getBookingWithId(Long bookingId) throws NotFoundException;
 }

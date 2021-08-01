@@ -8,6 +8,7 @@ import com.example.hotel.model.Hotel;
 import com.example.hotel.repository.IBookingRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -16,18 +17,19 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
+import org.mockito.stubbing.OngoingStubbing;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
-@MockitoSettings(strictness = Strictness.LENIENT)
 class BookingDaoImplTest {
 
 
@@ -56,46 +58,57 @@ class BookingDaoImplTest {
     }
 
     @Test
+    @DisplayName("Booking DAO Test : Getting all the bookings ")
     void getAllBookings() {
-//        when(iBookingDao.getAllBookings()).thenReturn(bookingList);
-//        List<Booking> bookings = iBookingDao.getAllBookings();
-//        assertEquals(4,bookings.size());
+        when(iBookingDao.getAllBookings()).thenReturn(bookingList);
+        List<Booking> bookings = iBookingDao.getAllBookings();
+        assertEquals(4,bookings.size());
     }
 
     @Test
+    @DisplayName("Booking DAO Test : Counting booked rooms of hotel within arriving and departure date")
     void countOfBookedRoomsOfHotelWithDate() {
 
-//        when(iBookingDao.countOfBookedRoomsOfHotelWithDate(1L,Date.valueOf("2021-02-02"),Date.valueOf("2021-02-04")))
-//                .thenReturn(0);
-//        int actual = iBookingDao.countOfBookedRoomsOfHotelWithDate(1L,Date.valueOf("2021-02-02"),Date.valueOf("2021-02-04"));
-//        assertEquals(0,actual);
+        when(iBookingDao.countOfBookedRoomsOfHotelWithDate(1L,Date.valueOf("2021-02-02"),Date.valueOf("2021-02-04")))
+                .thenReturn(2);
+        int actual = iBookingDao.countOfBookedRoomsOfHotelWithDate(1L,Date.valueOf("2021-02-02"),Date.valueOf("2021-02-04"));
+        assertEquals(2,actual);
     }
 
     @Test
+    @DisplayName("Booking DAO Test : Booking a hotel")
     void bookHotel() {
-//        Hotel hotel = new Hotel(2L,"Oberoi","Agra");
-//        Customer customer = new Customer("John");
-//        Booking booking = new Booking(45L,Date.valueOf("2021-12-05"),Date.valueOf("2021-12-08"),BookingStatus.ACTIVE,hotel,customer,2);
-//        when(iBookingDao.bookHotel(booking)).thenReturn(booking);
-//        Booking actualBooking = iBookingDao.bookHotel(booking);
-//        assertEquals(45,actualBooking.getBookingId());
+        Hotel hotel = new Hotel(2L,"Oberoi","Agra");
+        Customer customer = new Customer("John");
+        Booking booking = new Booking(45L,Date.valueOf("2021-12-05"),Date.valueOf("2021-12-08"),BookingStatus.ACTIVE,hotel,customer,2);
+        when(iBookingDao.bookHotel(booking)).thenReturn(booking);
+        Booking actualBooking = iBookingDao.bookHotel(booking);
+        assertEquals(45,actualBooking.getBookingId());
     }
 
     @Test
+    @DisplayName("Booking DAO Test : Cancel a booking with booking not exist with id")
+    void cancelBookingWithIdNotExist() throws NotFoundException,NoSuchElementException {
+        assertThrows(NoSuchElementException.class,()-> iBookingDao.cancelBooking(202L));
+    }
+
+    @Test
+    @DisplayName("Booking DAO Test : Cancel a booking with booking exist with id")
     @Disabled
-    void cancelBooking() throws NotFoundException {
-//        bookingList.get(2).cancelBooking();
-//        when(iBookingDao.cancelBooking(11L));
-//        iBookingDao.cancelBooking(11L);
-
+    void cancelBookingWithIdExist()  throws NoSuchElementException {
+//       when(iBookingDao.cancelBooking(11L)).thenReturn(true);
+//       bookingList.get(2).cancelBooking();
+//       boolean actual = iBookingDao.cancelBooking(11L);
+//       assertTrue(actual);
     }
 
     @Test
-    void findBookingById() {
-
-//        when(iBookingDao.findBookingById(11L)).thenReturn(java.util.Optional.ofNullable(bookingList.get(2)));
-//        Optional<Booking> bookingOptional = iBookingDao.findBookingById(11L);
-//        assertEquals(11,bookingOptional.get().getBookingId());
+    @DisplayName("Booking DAO Test : get a booking by id")
+    void findBookingWithIdExist() {
+        when(iBookingDao.getBookingWithId(11L)).thenReturn(Optional.ofNullable(bookingList.get(2)));
+        Optional<Booking> booking = iBookingDao.getBookingWithId(11L);
+        assertTrue(booking.isPresent());
+        assertEquals(bookingList.get(2),booking.get());
 
     }
 

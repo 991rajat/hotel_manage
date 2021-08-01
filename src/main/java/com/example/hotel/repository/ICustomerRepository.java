@@ -1,5 +1,4 @@
 package com.example.hotel.repository;
-import com.example.hotel.dto.response.BookingResponseDto;
 import com.example.hotel.model.Booking;
 import com.example.hotel.model.Customer;
 import org.springframework.data.jpa.repository.JpaRepository;

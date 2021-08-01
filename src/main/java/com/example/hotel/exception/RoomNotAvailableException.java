@@ -1,6 +1,6 @@
 package com.example.hotel.exception;
 
-public class RoomNotAvailableException extends Exception{
+public class RoomNotAvailableException extends RuntimeException{
     public RoomNotAvailableException() {
         super();
     }

@@ -6,7 +6,7 @@ import com.sun.istack.NotNull;
 
 import javax.persistence.*;
 import java.util.Date;
-
+//TODO: Add created & updated
 @Entity
 @Table(name = "booking")
 public class Booking {
@@ -39,6 +39,9 @@ public class Booking {
 
     @Column(name = "booked_rooms")
     private Integer bookedRooms;
+
+    @Version
+    private Integer version;
 
     public Booking() {
     }

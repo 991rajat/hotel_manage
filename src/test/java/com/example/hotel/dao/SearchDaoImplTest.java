@@ -4,6 +4,7 @@ import com.example.hotel.model.Hotel;
 import com.example.hotel.model.Room;
 import com.example.hotel.repository.ISearchRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -66,6 +67,7 @@ class SearchDaoImplTest {
     }
 
     @Test
+    @DisplayName("Search DAO Test : getting all the hotels.")
     void findAllHotels() {
         when(searchDao.findAllHotels()).thenReturn(hotelList);
         List<Hotel> actual = searchDao.findAllHotels();
@@ -74,6 +76,7 @@ class SearchDaoImplTest {
     }
 
     @Test
+    @DisplayName("Search DAO Test : getting all hotel within city.")
     void findAllHotelsWithCity() {
         List<Hotel> expected = new ArrayList<>();
         for(Hotel hotel: hotelList){
@@ -87,6 +90,7 @@ class SearchDaoImplTest {
     }
 
     @Test
+    @DisplayName("Search DAO Test : getting a hotel by Id.")
     void findHotelById() {
         when(searchDao.findHotelById(3L)).thenReturn(java.util.Optional.ofNullable(hotelList.get(2)));
         Optional<Hotel> hotel = searchDao.findHotelById(3L);

@@ -1,21 +1,30 @@
 package com.example.hotel.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.sun.istack.NotNull;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.validation.Valid;
 import java.util.Date;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class BookingRequestDto {
+
     @JsonProperty("hotel_id")
     private Long hotelId;
 
     @JsonProperty("arriving_date")
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @Valid
     private Date arrivingDate;
 
     @JsonProperty("departure_date")
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @Valid
     private Date departureDate;
+
 
     @JsonProperty("no_of_rooms")
     private int noOfRooms;

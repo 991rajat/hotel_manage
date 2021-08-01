@@ -6,8 +6,10 @@ import com.example.hotel.repository.IBookingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -29,6 +31,7 @@ public class BookingDaoImpl implements IBookingDao{
 
     //@Desc : Booking a hotel.
     @Override
+    @Transactional
     public Booking bookHotel(Booking booking) {
         return iBookingRepository.save(booking);
     }
@@ -36,17 +39,18 @@ public class BookingDaoImpl implements IBookingDao{
 
     //@Desc : Cancel a booking with given id.
     @Override
-    public void cancelBooking(Long id) throws NotFoundException {
+    @Transactional
+    public boolean cancelBooking(Long id) throws NoSuchElementException {
         Optional<Booking> booking = iBookingRepository.findById(id);
         booking.get().cancelBooking();
         iBookingRepository.save(booking.get());
-
+        return true;
     }
 
 
     //@Desc : Get a booking with a given id.
     @Override
-    public Optional<Booking> getBookingWithId(Long bookingId) throws NotFoundException {
+    public Optional<Booking> getBookingWithId(Long bookingId) throws NoSuchElementException {
         return iBookingRepository.findById(bookingId);
     }
 }

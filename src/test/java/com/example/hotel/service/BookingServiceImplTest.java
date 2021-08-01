@@ -1,14 +1,15 @@
 package com.example.hotel.service;
 
 import com.example.hotel.dao.IBookingDao;
+import com.example.hotel.dto.request.BookingRequestDto;
+import com.example.hotel.dto.response.BookingResponseDto;
 import com.example.hotel.exception.NotFoundException;
 import com.example.hotel.exception.RoomNotAvailableException;
 import com.example.hotel.model.Booking;
 import com.example.hotel.model.BookingStatus;
 import com.example.hotel.model.Customer;
 import com.example.hotel.model.Hotel;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -20,6 +21,14 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
+import java.util.Optional;
+
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
 class BookingServiceImplTest {
@@ -30,6 +39,7 @@ class BookingServiceImplTest {
     @InjectMocks
     private BookingServiceImpl iBookingService;
     List<Booking> bookingList = new ArrayList<>();
+    List<BookingResponseDto> bookingResponseList = new ArrayList<>();
 
     @BeforeEach
     void setUp() {
@@ -46,31 +56,43 @@ class BookingServiceImplTest {
         bookingList.add(booking2);
         bookingList.add(booking3);
         bookingList.add(booking4);
+        for(Booking booking: bookingList){
+            BookingResponseDto bookingResponse  = new BookingResponseDto();
+            bookingResponse.convertToBookingResponse(booking);
+            bookingResponseList.add(bookingResponse);
+        }
     }
 
     @Test
+    @DisplayName("BookingService Test: Get all bookings")
     void getAllBookings() {
-//        when(iBookingService.getAllBookings()).thenReturn(bookingList);
-//        List<Booking> bookings = iBookingService.getAllBookings();
-//        assertEquals(4,bookings.size());
+
+        when(iBookingService.getAllBookings()).thenReturn(bookingResponseList);
+        List<BookingResponseDto> bookings = iBookingService.getAllBookings();
+        assertEquals(4,bookings.size());
+
     }
 
     @Test
-    void getBookingWithId() throws NotFoundException {
-//        when(iBookingService.getBookingWithId(11L)).thenReturn(bookingList.get(2));
-//        Booking booking = iBookingService.getBookingWithId(11L);
-//        assertEquals(11,booking.getBookingId());
+    @DisplayName("BookingService Test: Get booking with id don't exist.")
+    void getBookingWithIdNotExist() throws NotFoundException {
+        when(iBookingDao.getBookingWithId(123L)).thenThrow(new NotFoundException("Booking not found with id "+123 +" ."));
+        NotFoundException e = assertThrows(NotFoundException.class,()->iBookingService.getBookingWithId(123L));
+        assertEquals("Booking not found with id "+123 +" .",e.getMessage());
     }
 
     @Test
+    @DisplayName("BookingService Test: Get booking with id don't exist.")
     void bookingHotel() throws RoomNotAvailableException, NotFoundException {
-//        Hotel hotel = new Hotel(2L,"Oberoi","Agra");
-//        Customer customer = new Customer(19L,"John");
-//        BookingRequestDto bookingReq = new BookingRequestDto(2L,Date.valueOf("2021-12-05"),Date.valueOf("2021-12-08"),2,19L);
-//        Booking booking = new Booking(45L,Date.valueOf("2021-12-05"),Date.valueOf("2021-12-08"),BookingStatus.ACTIVE,hotel,customer,2);
-//        when(iBookingService.bookingHotel(bookingReq)).thenReturn(booking).thenThrow();
-//        Booking actualBooking = iBookingService.bookingHotel(bookingReq);
-//        assertEquals(45,actualBooking.getBookingId());
+        Hotel hotel = new Hotel(2L,"Oberoi","Agra");
+        Customer customer = new Customer(19L,"John");
+        BookingRequestDto bookingReq = new BookingRequestDto(2L,Date.valueOf("2021-12-05"),Date.valueOf("2021-12-08"),2,19L);
+        Booking booking = new Booking(45L,Date.valueOf("2021-12-05"),Date.valueOf("2021-12-08"),BookingStatus.ACTIVE,hotel,customer,2);
+        BookingResponseDto bookingResponseDto = new BookingResponseDto();
+        bookingResponseDto.convertToBookingResponse(booking);
+        when(iBookingService.bookingHotel(bookingReq)).thenReturn(bookingResponseDto);
+        BookingResponseDto actualBookingResponse = iBookingService.bookingHotel(bookingReq);
+        assertEquals(45,actualBookingResponse.getId());
     }
 
     @Test
